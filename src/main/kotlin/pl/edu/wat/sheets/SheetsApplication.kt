@@ -1,4 +1,4 @@
-    package pl.edu.wat.sheets
+package pl.edu.wat.sheets
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
