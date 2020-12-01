@@ -14,7 +14,7 @@ class SampleDataLoader {
     @Bean
     fun demoData(sheetRepository: SheetRepository): CommandLineRunner {
         return CommandLineRunner {
-            for (i in 0..9) {
+            for (i in 0..4) {
                 sheetRepository.save(createRandomSheet(i))
             }
         }

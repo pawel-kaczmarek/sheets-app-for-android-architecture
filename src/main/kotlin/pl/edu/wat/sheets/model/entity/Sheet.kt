@@ -2,6 +2,7 @@ package pl.edu.wat.sheets.model.entity
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -15,9 +16,9 @@ data class Sheet(
         val title: String,
         val description: String
 ) {
-    @OneToMany(mappedBy = "sheet", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "sheet", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val expenses = mutableSetOf<Expense>()
 
-    @OneToMany(mappedBy = "sheet", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "sheet", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val incomes = mutableSetOf<Income>()
 }

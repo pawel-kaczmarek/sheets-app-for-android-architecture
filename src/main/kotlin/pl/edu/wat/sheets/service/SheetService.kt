@@ -24,19 +24,26 @@ class SheetService(
 
     fun getAllSheets(): List<SheetFullDto> {
         logger.info("Getting all sheets")
-        return sheetRepository.findAll().map { it.toDto() }
+        val sheets = sheetRepository.findAll().map { it.toDto() }
+        logger.info("Getted all sheets $sheets")
+        return sheets
     }
 
     fun saveSheet(sheetDto: SheetDto): SheetFullDto {
         logger.info("Saving sheet $sheetDto")
-        return sheetRepository.save(sheetDto.toEntity()).toDto()
+        val saved = sheetRepository.save(sheetDto.toEntity()).toDto()
+        logger.info("Saved sheet: $saved")
+        return saved
     }
 
     fun saveExpense(expenseDto: ExpenseDto): ExpenseDto {
         logger.info("Saving expense $expenseDto")
         val sheet = sheetRepository.findByIdOrNull(expenseDto.sheetId)
+        logger.info("Found related sheet $sheet")
         sheet?.let {
-            return expenseRepository.save(expenseDto.toEntity(it)).toDto()
+            val saved = expenseRepository.save(expenseDto.toEntity(it)).toDto()
+            logger.info("Saved expense: $saved")
+            return saved
         }
         throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sheet not found for ID = ${expenseDto.id}")
     }
@@ -44,10 +51,46 @@ class SheetService(
     fun saveIncome(incomeDto: IncomeDto): IncomeDto {
         logger.info("Saving income $incomeDto")
         val sheet = sheetRepository.findByIdOrNull(incomeDto.sheetId)
+        logger.info("Found related sheet $sheet")
         sheet?.let {
-            return incomeRepository.save(incomeDto.toEntity(it)).toDto()
+            val saved = incomeRepository.save(incomeDto.toEntity(it)).toDto()
+            logger.info("Saved income: $saved")
+            return saved
         }
         throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sheet not found for ID = ${incomeDto.id}")
+    }
+
+    fun deleteSheet(sheetId: Long): Boolean {
+        val sheet = sheetRepository.findByIdOrNull(sheetId)
+        sheet?.let {
+            logger.info("Deleting sheet $sheet")
+            sheetRepository.delete(sheet)
+            logger.info("Sheet deleted: $sheet")
+            return true
+        }
+        return false
+    }
+
+    fun deleteIncome(incomeId: Long): Boolean {
+        val income = incomeRepository.findByIdOrNull(incomeId)
+        income?.let {
+            logger.info("Deleting income $income")
+            incomeRepository.delete(income)
+            logger.info("Income deleted: $income")
+            return true
+        }
+        return false
+    }
+
+    fun deleteExpense(expenseId: Long): Boolean {
+        val expense = expenseRepository.findByIdOrNull(expenseId)
+        expense?.let {
+            logger.info("Deleting expense $expense")
+            expenseRepository.delete(expense)
+            logger.info("Expense deleted: $expense")
+            return true
+        }
+        return false
     }
 
     companion object {
